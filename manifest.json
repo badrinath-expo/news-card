@@ -1,0 +1,20 @@
+{
+    "manifest_version": 3,
+    "name": "News Card Generator",
+    "version": "1.0",
+    "description": "Generates news cards from web pages.",
+    "permissions": [
+      "activeTab",
+      "storage",
+      "downloads",
+      "tabs",
+      "scripting"
+    ],
+
+    "action": {
+      "default_popup": "index.html"
+    },
+    "content_scripts": [
+      ]
+  }
+
