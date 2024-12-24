@@ -58,3 +58,7 @@ button {
     background-color: #cccccc72;
   }
 }
+
+.share-btn{
+  display: none;
+}

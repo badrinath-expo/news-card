@@ -103,12 +103,39 @@ function testCard() {
   );
 }
 
+
+async function drawImage(ctx,imageUrl) {
+  const img = new Image();
+
+  return new Promise((resolve) => {
+    // Set up the onload and onerror handlers
+    img.src = imageUrl;
+    img.onload = () => {
+      ctx.drawImage(img, 0, 0, 1080, 1080);
+      resolve();
+    };
+
+    img.onerror = () => {
+      console.warn(`Failed to load image: ${imageUrl}. Using fallback image.`);
+      const fallbackImg = new Image();
+      fallbackImg.src = "news.png"; // fallback image
+      fallbackImg.onload = () => {
+      
+        ctx.drawImage(fallbackImg, 0, 0, 1080, 1080);
+        resolve();
+      };
+    };
+
+  });
+}
+
 //generating card
-function generateNewsCard(headline, body, imageUrl, source) {
+async function generateNewsCard(headline, body, imageUrl, source) {
   const canvas = document.createElement("canvas");
   canvas.width = 1080;
   canvas.height = 1080;
   const ctx = canvas.getContext("2d");
+
   function wrapText(context, text, x, y, maxWidth, lineHeight) {
     const words = text.split(" ");
     let line = "";
@@ -128,11 +155,9 @@ function generateNewsCard(headline, body, imageUrl, source) {
     context.fillText(line, x, y);
   }
 
-  // Draw the image
-  const img = new Image();
-  img.src = imageUrl || "popcorn.png";
-  img.onload = () => {
-    ctx.drawImage(img, 0, 0, 1080, 1080);
+
+
+  await drawImage(ctx, imageUrl)
 
     // Draw text background
     ctx.fillStyle = "rgba(0, 0, 0, 0.7)";
@@ -150,7 +175,7 @@ function generateNewsCard(headline, body, imageUrl, source) {
     // Add body text
     ctx.font = "24px sans-serif";
     const bodyX = 50;
-    const bodyY = 800;
+    const bodyY = 850;
     const bodyMaxWidth = 980;
     wrapText(ctx, body, bodyX, bodyY, bodyMaxWidth, 40);
 
@@ -166,7 +191,6 @@ function generateNewsCard(headline, body, imageUrl, source) {
     link.href = canvas.toDataURL("image/png");
     link.click();
     generateCardButton.innerText = "Generate News Card";
-  };
 }
 
 generateCardButton.addEventListener("click", () => {
